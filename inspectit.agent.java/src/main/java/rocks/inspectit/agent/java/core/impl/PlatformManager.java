@@ -108,6 +108,9 @@ public class PlatformManager implements IPlatformManager, InitializingBean {
 	 *             If setting configuration to the {@link #configurationStorage} fails.
 	 */
 	private void doRegistration() throws StorageException {
+		if (log.isInfoEnabled()) {
+			log.info("Start to register platform....");
+		}
 		try {
 			// not connected? -> connect
 			if (!connection.isConnected()) {
@@ -121,6 +124,9 @@ public class PlatformManager implements IPlatformManager, InitializingBean {
 
 			// clear the flag
 			serverErrorOccured = false;
+			if (log.isInfoEnabled()) {
+				log.info("Platform registration complete....");
+			}
 		} catch (ServerUnavailableException serverUnavailableException) {
 			if (serverUnavailableException.isServerTimeout()) {
 				log.error("Server timeout while trying to register something at the server.");
@@ -169,7 +175,7 @@ public class PlatformManager implements IPlatformManager, InitializingBean {
 			configurationStorage.setAgentConfiguration(agentConfiguration);
 
 			if (log.isDebugEnabled()) {
-				log.debug("Received platform ID: " + platformId);
+				log.info("Received platform ID: " + platformId);
 			}
 		} catch (BusinessException exception) {
 			log.error("The agent was not able to get configuration from the server. " + exception.getMessage());

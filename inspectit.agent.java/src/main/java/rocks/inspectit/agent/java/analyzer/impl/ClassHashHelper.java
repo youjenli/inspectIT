@@ -218,14 +218,8 @@ public class ClassHashHelper implements InitializingBean, DisposableBean {
 		// only load if configuration says that the class cache exists on the CMR
 		if (configurationStorage.isClassCacheExistsOnCmr()) {
 			loadCacheFromDisk();
-			if (log.isInfoEnabled()) {
-				log.info("Class cache has been loaded from disk.");
-			}
 		} else {
 			deleteCacheFromDisk();
-			if (log.isInfoEnabled()) {
-				log.info("Class cache in disk has been deleted.");
-			}
 		}
 
 		// check if there are any initial instrumentation points in configuration
@@ -239,9 +233,6 @@ public class ClassHashHelper implements InitializingBean, DisposableBean {
 					registerSent(fqn, hash);
 				}
 			}
-			if (log.isInfoEnabled()) {
-				log.info("Instrumentation definition of all classes has been sent.");
-			}
 		}
 
 		Runnable saveCacheToDiskRunnable = new Runnable() {
@@ -251,6 +242,9 @@ public class ClassHashHelper implements InitializingBean, DisposableBean {
 			}
 		};
 		executorService.scheduleAtFixedRate(saveCacheToDiskRunnable, 30, 300, TimeUnit.SECONDS);
+		if (log.isInfoEnabled()) {
+			log.info("ClassHashHelper has been initialized.");
+		}
 	}
 
 	/**
@@ -284,6 +278,9 @@ public class ClassHashHelper implements InitializingBean, DisposableBean {
 						classEntry.addHash(hash);
 					}
 				}
+				if (log.isInfoEnabled()) {
+					log.info("Class cache has been loaded from disk.");
+				}
 			} catch (Throwable t) { // NOPMD
 				log.warn("Unable to load sending classes cache from disk.", t);
 			} finally {
@@ -307,9 +304,12 @@ public class ClassHashHelper implements InitializingBean, DisposableBean {
 		if (file.exists()) {
 			if (!file.delete()) {
 				log.warn("Unable to delete the existing class cache file: " + file.getAbsolutePath());
+			} else {
+				if (log.isInfoEnabled()) {
+					log.info("Class cache in disk has been deleted.");
+				}
 			}
 		}
-
 	}
 
 	/**

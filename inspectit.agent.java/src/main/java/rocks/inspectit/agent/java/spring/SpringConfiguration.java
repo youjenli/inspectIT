@@ -6,6 +6,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -36,7 +37,6 @@ import rocks.inspectit.shared.all.instrumentation.config.impl.StrategyConfig;
 import rocks.inspectit.shared.all.kryonet.Client;
 import rocks.inspectit.shared.all.kryonet.ExtendedSerializationImpl;
 import rocks.inspectit.shared.all.kryonet.IExtendedSerialization;
-import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * Post process configuration storage to define buffer and sending strategy beans.
@@ -49,10 +49,9 @@ import rocks.inspectit.shared.all.spring.logger.Log;
 public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor {
 
 	/**
-	 * The logger of the class.
+	 * The logger of this class. Initialized manually.
 	 */
-	@Log
-	Logger log;
+	private static final Logger LOG = LoggerFactory.getLogger(SpringConfiguration.class);
 
 	/**
 	 * Registry to add bean definitions to.
@@ -111,8 +110,8 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 		};
 
 		ThreadFactory threadFactory = new ThreadFactoryBuilder().setThreadFactory(inspectitThreadFactory).setNameFormat("inspectit-socket-read-executor-service-thread-%d").setDaemon(true).build();
-		if (log.isInfoEnabled()) {
-			log.info("ThreadFactory of SocketReadExecutorService has been created by " + this.getClass().getName());
+		if (LOG.isInfoEnabled()) {
+			LOG.info("ThreadFactory of SocketReadExecutorService has been created");
 		}
 		return Executors.newFixedThreadPool(1, threadFactory);
 	}
@@ -134,8 +133,8 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 		};
 
 		ThreadFactory threadFactory = new ThreadFactoryBuilder().setThreadFactory(inspectitThreadFactory).setNameFormat("inspectit-core-service-executor-service-thread-%d").setDaemon(true).build();
-		if (log.isInfoEnabled()) {
-			log.info("ThreadFactory of coreServiceExecutorService has been created by " + this.getClass().getName());
+		if (LOG.isInfoEnabled()) {
+			LOG.info("ThreadFactory of coreServiceExecutorService has been created");
 		}
 		return Executors.newScheduledThreadPool(3, threadFactory);
 	}
@@ -155,8 +154,8 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 	public Client getClient(PrototypesProvider prototypesProvider, IThreadTransformHelper threadTransformHelper) {
 		IExtendedSerialization serialization = new ExtendedSerializationImpl(prototypesProvider);
 		AgentAwareClient client = new AgentAwareClient(serialization, prototypesProvider, threadTransformHelper);
-		if (log.isInfoEnabled()) {
-			log.info("Instance of AgentAwareClient has been created by " + this.getClass().getName());
+		if (LOG.isInfoEnabled()) {
+			LOG.info("Instance of AgentAwareClient has been created");
 		}
 		return client;
 	}
@@ -173,8 +172,8 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 	@Autowired
 	public TracerImpl getTracer(Reporter reporter) {
 		TracerImpl tracer = new TracerImpl(new SystemTimer(), reporter, true);
-		if (log.isInfoEnabled()) {
-			log.info("TracerImpl has been created by " + this.getClass().getName());
+		if (LOG.isInfoEnabled()) {
+			LOG.info("TracerImpl has been created");
 		}
 		return tracer;
 	}
@@ -244,9 +243,9 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 		definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
 		definition.setAutowireCandidate(true);
 		registry.registerBeanDefinition(beanName, definition);
+        if (LOG.isInfoEnabled()) {
+            LOG.info(beanName + " has been registered to spring context.");
+        }
 		beanFactory.getBean(beanName, clazz);
-		if (log.isInfoEnabled()) {
-			log.info("Bean '" + beanName + "', instance of " + className + " has been registered to spring context.");
-		}
 	}
 }

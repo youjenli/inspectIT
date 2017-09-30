@@ -135,7 +135,7 @@ public class SpringAgent implements IAgent {
 	 */
 	private void initSpring() {
 		if (LOG.isInfoEnabled()) {
-			LOG.info("Initializing Spring on inspectIT Agent...");
+			LOG.info("Initializing Spring application context on inspectIT Agent...");
 		}
 
 		// first add shutdown hook so we are informed when shutdown is initialized to stop
@@ -170,7 +170,7 @@ public class SpringAgent implements IAgent {
 			}
 
 			if (LOG.isInfoEnabled()) {
-				LOG.info("Spring successfully initialized");
+				LOG.info("Spring application context successfully initialized.");
 			}
 
 			// log version
@@ -184,14 +184,23 @@ public class SpringAgent implements IAgent {
 			configurationStorage = beanFactory.getBean(IConfigurationStorage.class);
 			byteCodeAnalyzer = beanFactory.getBean(IByteCodeAnalyzer.class);
 			threadTransformHelper = beanFactory.getBean(IThreadTransformHelper.class);
+			if (LOG.isInfoEnabled()) {
+				LOG.info("Necessary beans successfully loaded.");
+			}
 
 			// load ignore patterns only once
 			ignoreClassesPatterns = configurationStorage.getIgnoreClassesPatterns();
+			if (LOG.isInfoEnabled()) {
+				LOG.info("Ignored classes patterns successfully loaded.");
+			}
 
 			// injecting instrumentation in instrumentation aware beans
 			Map<String, IInstrumentationAware> instrumentationAwareBeans = ctx.getBeansOfType(IInstrumentationAware.class);
 			for (IInstrumentationAware instrumentationAwareBean : instrumentationAwareBeans.values()) {
 				instrumentationAwareBean.setInstrumentation(instrumentation);
+			}
+			if (LOG.isInfoEnabled()) {
+				LOG.info("inspectIT agent initialization succeed!");
 			}
 		} catch (Throwable throwable) { // NOPMD
 			disableInstrumentation = true;

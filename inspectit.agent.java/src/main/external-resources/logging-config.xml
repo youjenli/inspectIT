@@ -12,7 +12,7 @@
 	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
 		<Target>System.out</Target>
 		<encoder>
-			<pattern>%d{ISO8601}: [inspectIT] %-6r [%15.15t] %-5p %30.30c - %m%n%nopex</pattern>
+			<pattern>%d{ISO8601}: [inspectIT] %-6r [%15.15t] %-5p %logger{30} - %m%n%nopex</pattern>
 		</encoder>
 	</appender>
 
@@ -21,10 +21,10 @@
 	<appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>${logDir}/agent.log</file>
 		<encoder>
-			<pattern>%d{ISO8601}: %-6r [%15.15t] %-5p %30.30c - %m%n%rEx</pattern>
+			<pattern>%d{ISO8601}: %-6r [%15.15t] %-5p %logger{30} - %m%n%rEx</pattern>
 		</encoder>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>logDir/agent.%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
+			<fileNamePattern>logDir/agent.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
 			<maxHistory>30</maxHistory>
 			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
 				<maxFileSize>20MB</maxFileSize>
@@ -38,10 +38,10 @@
 	<appender name="exceptions" class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>${logDir}/exceptions.log</file>
 		<encoder>
-			<pattern>%d{ISO8601}: %-6r [%15.15t] %-5p %30.30c - %m%n%rEx</pattern>
+			<pattern>%d{ISO8601}: %-6r [%15.15t] %-5p %logger{30} - %m%n%rEx</pattern>
 		</encoder>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${logDir}/exceptions.%d{yyyy-MM-dd}.%i.zip</fileNamePattern>
+			<fileNamePattern>${logDir}/exceptions.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
 			<maxHistory>30</maxHistory>
 			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
 				<maxFileSize>20MB</maxFileSize>
