@@ -111,6 +111,9 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 		};
 
 		ThreadFactory threadFactory = new ThreadFactoryBuilder().setThreadFactory(inspectitThreadFactory).setNameFormat("inspectit-socket-read-executor-service-thread-%d").setDaemon(true).build();
+		if (log.isInfoEnabled()) {
+			log.info("ThreadFactory of SocketReadExecutorService has been created by " + this.getClass().getName());
+		}
 		return Executors.newFixedThreadPool(1, threadFactory);
 	}
 
@@ -131,6 +134,9 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 		};
 
 		ThreadFactory threadFactory = new ThreadFactoryBuilder().setThreadFactory(inspectitThreadFactory).setNameFormat("inspectit-core-service-executor-service-thread-%d").setDaemon(true).build();
+		if (log.isInfoEnabled()) {
+			log.info("ThreadFactory of coreServiceExecutorService has been created by " + this.getClass().getName());
+		}
 		return Executors.newScheduledThreadPool(3, threadFactory);
 	}
 
@@ -148,7 +154,11 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 	@Autowired
 	public Client getClient(PrototypesProvider prototypesProvider, IThreadTransformHelper threadTransformHelper) {
 		IExtendedSerialization serialization = new ExtendedSerializationImpl(prototypesProvider);
-		return new AgentAwareClient(serialization, prototypesProvider, threadTransformHelper);
+		AgentAwareClient client = new AgentAwareClient(serialization, prototypesProvider, threadTransformHelper);
+		if (log.isInfoEnabled()) {
+			log.info("Instance of AgentAwareClient has been created by " + this.getClass().getName());
+		}
+		return client;
 	}
 
 	/**
@@ -163,6 +173,9 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 	@Autowired
 	public TracerImpl getTracer(Reporter reporter) {
 		TracerImpl tracer = new TracerImpl(new SystemTimer(), reporter, true);
+		if (log.isInfoEnabled()) {
+			log.info("TracerImpl has been created by " + this.getClass().getName());
+		}
 		return tracer;
 	}
 
