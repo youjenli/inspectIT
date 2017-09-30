@@ -407,6 +407,9 @@ public class ConfigurationStorage implements IConfigurationStorage, Initializing
 		if ((null == repository) || StringUtils.isEmpty(agentName)) {
 			throw new BeanInitializationException("inspectIT agent must be initialized with IP and port of the CMR via JVM parameters.");
 		}
+		if (log.isInfoEnabled()) {
+			log.info("Configuration storage has been initialized.");
+		}
 	}
 
 }

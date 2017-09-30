@@ -130,7 +130,7 @@ public class ClassHashHelper implements InitializingBean, DisposableBean {
 
 	/**
 	 * Returns if the class with given fqn and hash has been sent to the CMR. Only hashes that are
-	 * registered with {@link #registerSent(String)} are considered as sent ones.
+	 * registered with {@link #registerSent(String, String)} are considered as sent ones.
 	 *
 	 * @param fqn
 	 *            Class fully qualified name.
@@ -218,8 +218,14 @@ public class ClassHashHelper implements InitializingBean, DisposableBean {
 		// only load if configuration says that the class cache exists on the CMR
 		if (configurationStorage.isClassCacheExistsOnCmr()) {
 			loadCacheFromDisk();
+			if (log.isInfoEnabled()) {
+				log.info("Class cache has been loaded from disk.");
+			}
 		} else {
 			deleteCacheFromDisk();
+			if (log.isInfoEnabled()) {
+				log.info("Class cache in disk has been deleted.");
+			}
 		}
 
 		// check if there are any initial instrumentation points in configuration
@@ -232,6 +238,9 @@ public class ClassHashHelper implements InitializingBean, DisposableBean {
 				for (String hash : entry.getKey()) {
 					registerSent(fqn, hash);
 				}
+			}
+			if (log.isInfoEnabled()) {
+				log.info("Instrumentation definition of all classes has been sent.");
 			}
 		}
 

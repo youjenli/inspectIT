@@ -183,6 +183,9 @@ public class PlatformManager implements IPlatformManager, InitializingBean {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		doRegistration();
+		if (log.isInfoEnabled()){
+			log.info("PlatformManager has been initialized.");
+		}
 	}
 
 }

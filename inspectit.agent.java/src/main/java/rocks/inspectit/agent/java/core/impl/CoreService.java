@@ -778,6 +778,9 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		start();
+		if (log.isInfoEnabled()){
+			log.info("Core service has been started.");
+		}
 	}
 
 	/**
@@ -786,6 +789,9 @@ public class CoreService implements ICoreService, InitializingBean, DisposableBe
 	@Override
 	public void destroy() throws Exception {
 		stop();
+		if (log.isInfoEnabled()){
+			log.info("Core service has been stopped.");
+		}
 	}
 
 }

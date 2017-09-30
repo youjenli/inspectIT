@@ -464,6 +464,9 @@ public class ByteCodeAnalyzer implements IByteCodeAnalyzer, InitializingBean {
 		for (IMethodSensor methodSensor : methodSensors) {
 			methodSensorMap.put(methodSensor.getSensorTypeConfig().getId(), methodSensor);
 		}
+		if (log.isInfoEnabled()) {
+			log.info("Byte code analyzer has been initialized.");
+		}
 	}
 
 }

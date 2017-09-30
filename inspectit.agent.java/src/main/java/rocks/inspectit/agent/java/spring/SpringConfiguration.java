@@ -5,6 +5,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 
+import org.slf4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -35,6 +36,7 @@ import rocks.inspectit.shared.all.instrumentation.config.impl.StrategyConfig;
 import rocks.inspectit.shared.all.kryonet.Client;
 import rocks.inspectit.shared.all.kryonet.ExtendedSerializationImpl;
 import rocks.inspectit.shared.all.kryonet.IExtendedSerialization;
+import rocks.inspectit.shared.all.spring.logger.Log;
 
 /**
  * Post process configuration storage to define buffer and sending strategy beans.
@@ -45,6 +47,12 @@ import rocks.inspectit.shared.all.kryonet.IExtendedSerialization;
 @Configuration
 @ComponentScan("rocks.inspectit")
 public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor {
+
+	/**
+	 * The logger of the class.
+	 */
+	@Log
+	Logger log;
 
 	/**
 	 * Registry to add bean definitions to.
@@ -224,5 +232,8 @@ public class SpringConfiguration implements BeanDefinitionRegistryPostProcessor 
 		definition.setAutowireCandidate(true);
 		registry.registerBeanDefinition(beanName, definition);
 		beanFactory.getBean(beanName, clazz);
+		if (log.isInfoEnabled()) {
+			log.info("Bean '" + beanName + "', instance of " + className + " has been registered to spring context.");
+		}
 	}
 }
